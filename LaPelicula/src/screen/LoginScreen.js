@@ -34,7 +34,7 @@ export default class LoginScreen extends Component {
         if (state.login == login &&
             state.senha == senha) {
             this.setLogado();
-            //this.props.navigation.navigate('App');
+            this.props.navigation.navigate('App');
         } else {
             // Works on both iOS and Android
             Alert.alert(
