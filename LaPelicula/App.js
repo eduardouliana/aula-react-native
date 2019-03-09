@@ -1,4 +1,6 @@
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, 
+  createBottomTabNavigator,
+  createAppContainer } from 'react-navigation';
 
 //telas criadas
 import HomeScreen from './src/screen/HomeScreen';
@@ -8,13 +10,34 @@ import LoginScreen from './src/screen/LoginScreen';
 import SobreScreen from './src/screen/SobreScreen';
 
 //criar navegador Stack
-const NavegadorStack = createStackNavigator({
+/*const NavegadorStack = createStackNavigator({
   Home: { screen: HomeScreen },
   Filme: { screen: FilmeScreen },
   Lista: { screen: ListaFilmesScreen },
   Login: { screen: LoginScreen },
   Sobre: { screen: SobreScreen }
+});*/
+
+//navegacao por tab
+const NavegadorStack = createBottomTabNavigator({
+  Home: { screen: HomeScreen },
+  Filme: { screen: FilmeScreen },
+  Lista: { screen: ListaFilmesScreen },
+  Login: { screen: LoginScreen },
+  Sobre: { screen: SobreScreen }
+}, {
+  tabBarOptions: {
+    activeTintColor: '#FFFFFF',
+    inactiveTintColor: '#CCCCCC',
+    style: {
+      backgroundColor: '#570076'
+    },
+    indicatorStyle: {
+      backgroundColor: null
+    }
+  }
 });
+
 
 // container principal da aplicação
 const App = createAppContainer(NavegadorStack);
