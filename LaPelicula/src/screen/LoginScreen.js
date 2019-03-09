@@ -1,41 +1,75 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, BackHandler } from 'react-native';
+import { StyleSheet, TextInput, View, AsyncStorage, Alert } from 'react-native';
 import { LPButton } from '../component/LPButton';
 
 export default class LoginScreen extends Component {
-    //configurando opções de navegação
     static navigationOptions = ({ navigation }) => ({
-        title: 'Página de Login',
-        headerStyle: {
-            backgroundColor: 'blue'
-        },
-        headerTintColor: 'white'
+        title: 'Login',
     });
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            login: '',
+            senha: ''
+        }
 
-        this.telaSobre = this.telaSobre.bind(this);
-        this.sair = this.sair.bind(this);
-    }
-    //navega para tela Sobre
-    telaSobre() {
-        this.props.navigation.navigate('Sobre');
+        this.efetuarLogin = this.efetuarLogin.bind(this);
+        this.setLogado = this.setLogado.bind(this);
+        this.initLogin = this.initLogin.bind(this);
+
+        this.initLogin();
     }
 
-    sair() {
-        BackHandler.exitApp();
+    efetuarLogin = async () => {
+        let state = this.state;
+        let login = '-1';
+        await AsyncStorage.getItem('login').then((value) => {
+            login = value;
+        });
+        let senha = '-1';
+        await AsyncStorage.getItem('senha').then((value) => {
+            senha = value;
+        });
+        if (state.login == login &&
+            state.senha == senha) {
+            this.setLogado();
+            //this.props.navigation.navigate('App');
+        } else {
+            // Works on both iOS and Android
+            Alert.alert(
+                'Login',
+                'Usuário ou senha inválidos!',
+                [
+                    { text: 'OK' },
+                ],
+                { cancelable: false },
+            );
+        }
+    }
+
+    initLogin() {
+        AsyncStorage.setItem('login', '1');
+        AsyncStorage.setItem('senha', '2');
+        AsyncStorage.setItem('logado', 'false');
+    }
+
+    setLogado() {
+        AsyncStorage.setItem('logado', 'true');
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>Tela de Login</Text>
-                <LPButton titulo="Sobre" onPress={() => { this.telaSobre() }} />
-                <LPButton titulo="Sair" onPress={() => { this.sair() }} />
+                <TextInput style={styles.inputText} autoFocus={true} placeholder='Usuário' onChangeText={(value) => this.setState({ login: value })} />
+                <TextInput style={styles.inputText} secureTextEntry={true} placeholder='Senha' onChangeText={(value) => this.setState({ senha: value })} />
+                <View style={{ margin: 7 }} />
+                <LPButton
+                    onPress={this.efetuarLogin}
+                    titulo="Login"
+                />
             </View>
-        );
+        )
     }
 }
 
@@ -43,6 +77,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        borderWidth: 15,
+        borderColor: '#F5FCFF'
+    },
+    inputText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 10,
+        margin: 10
     }
 });

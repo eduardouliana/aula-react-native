@@ -8,6 +8,7 @@ import FilmeScreen from './src/screen/FilmeScreen';
 import ListaFilmesScreen from './src/screen/ListaFilmesScreen';
 import LoginScreen from './src/screen/LoginScreen';
 import SobreScreen from './src/screen/SobreScreen';
+import CameraScreen from './src/screen/CameraScreen';
 
 //criar navegador Stack
 /*const NavegadorStack = createStackNavigator({
@@ -24,7 +25,8 @@ const NavegadorStack = createBottomTabNavigator({
   Filme: { screen: FilmeScreen },
   Lista: { screen: ListaFilmesScreen },
   Login: { screen: LoginScreen },
-  Sobre: { screen: SobreScreen }
+  Sobre: { screen: SobreScreen },
+  Sobre: { screen: CameraScreen }
 }, {
   tabBarOptions: {
     activeTintColor: '#FFFFFF',
