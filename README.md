@@ -45,3 +45,19 @@ npm install
 react-native link
 
 corrigir barras "\" > "/" no arquivo settings.gradle
+
+npm install --save react-native-sqlite-storage
+
+npm install --save-dev @types/react-native-sqlite-storage
+npm install
+react-native link
+
+
+gerar apk
+mkdir android\app\src\main\assets
+
+react-native bundle --platform android --dev false --entry-file index.js --bundle-output android\app\src\main\assets\index.android.bundle --assets-dest android\app\src\main\res\
+
+react-native run-android
+gradlew clean
+gradlew assembleRelease
