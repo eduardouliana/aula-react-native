@@ -1,5 +1,8 @@
-import React, {Component} from 'react';
-import {StatusBar, View, ActivityIndicator, AsyncStorage, StyleSheet} from 'react-native'
+import React, { Component } from 'react';
+import {
+  StatusBar, View, ActivityIndicator,
+  AsyncStorage, StyleSheet, Alert
+} from 'react-native'
 
 import {
   createStackNavigator,
@@ -16,6 +19,13 @@ import LoginScreen from './src/screen/LoginScreen';
 import SobreScreen from './src/screen/SobreScreen';
 import CameraScreen from './src/screen/CameraScreen';
 
+import { openDatabase } from 'react-native-sqlite-storage';
+
+//criar um objeto para representar banco de dados
+var db = openDatabase({
+  name: 'lapelicula.db'
+});
+
 class LoginLoadingScreen extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +33,39 @@ class LoginLoadingScreen extends Component {
     this.bootstrapAsync = this.bootstrapAsync.bind(this);
 
     this.bootstrapAsync();
- }
+
+    // criação das tabelas no banco de dados
+    db.transaction(function (tx) {
+      tx.executeSql('SELECT name FROM sqlite_master WHERE type = \'table\' AND name = \'filme\'',
+
+        [], function (txp, res) {
+          if (res.rows.length == 0) {
+            Alert.alert(
+              'Login',
+              'criando tabela',
+              [
+                  { text: 'OK' },
+              ],
+              { cancelable: false },
+          );
+            tx.executeSql('CREATE TABLE IF NOT EXISTS filme(codigo INTEGER PRIMARY KEY AUTOINCREMENT, descricao VARCHAR(200), imagem blob)', []);
+
+            tx.executeSql('INSERT INTO filme(descricao) VALUES(\'filme 01\')', []);
+            tx.executeSql('INSERT INTO filme(descricao) VALUES(\'filme 02\')', []);
+            tx.executeSql('INSERT INTO filme(descricao) VALUES(\'filme 03\')', []);
+
+            Alert.alert(
+              'Login',
+              'depois',
+              [
+                  { text: 'OK' },
+              ],
+              { cancelable: false },
+          );
+          }
+        })
+    });
+  }
 
   // Fetch the token from storage then navigate to our appropriate place
   bootstrapAsync() {
@@ -94,9 +136,9 @@ const AppSwitch = createSwitchNavigator({
   App: AppTab,
   Auth: AppStack
 }, {
-  //para dizer que é para iniciar aqui por primeiro
-  initialRouteName: 'LoginLoading'
-});
+    //para dizer que é para iniciar aqui por primeiro
+    initialRouteName: 'LoginLoading'
+  });
 
 
 // container principal da aplicação

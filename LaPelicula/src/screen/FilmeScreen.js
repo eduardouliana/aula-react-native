@@ -7,6 +7,9 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { LPButton } from '../component/LPButton';
+import { openDatabase } from 'react-native-sqlite-storage';
+
+var db = openDatabase({ name: 'lapelicula.db' });
 
 export default class FilmeScreen extends Component {
 
@@ -49,7 +52,11 @@ export default class FilmeScreen extends Component {
   }
 
   salvar() {
-
+    //insert na base
+    db.transaction(tx => {
+      tx.executeSql('INSERT INTO filme(descricao,imagem) VALUES(?, ?)',
+        [this.state.descricao, this.state.uri]);
+    })
     this.props.navigation.navigate('Lista');
   }
 
