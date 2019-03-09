@@ -33,3 +33,15 @@ C:\Python27\
 Criar projeto:
 react-native init NOMEPROJETO
 react-native run-android
+
+-- para utilizar navegação
+npm install --save react-navigation
+npm install --save react-native-gesture-handler
+
+-- para utilizar câmera
+npm install --save react-native-camera
+
+npm install
+react-native link
+
+corrigir barras "\" > "/" no arquivo settings.gradle
