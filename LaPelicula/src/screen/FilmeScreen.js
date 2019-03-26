@@ -32,6 +32,7 @@ export default class FilmeScreen extends Component {
   componentDidMount() {
     if (typeof this.props.navigation.state.params !== "undefined") {
       this.setState({ uri: this.props.navigation.state.params.imguri })
+      alert(this.props.navigation.state.params.data.descricao)
     }
   }
 
