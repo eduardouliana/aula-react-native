@@ -31,10 +31,26 @@ export default class FilmeScreen extends Component {
   //quando o componente foi criado/montado
   componentDidMount() {
     if (typeof this.props.navigation.state.params !== "undefined") {
-      this.setState({ uri: this.props.navigation.state.params.imguri })
-      alert(this.props.navigation.state.params.data.descricao)
+      if (typeof this.props.navigation.state.params.imguri !== "") {
+        this.setState({ uri: this.props.navigation.state.params.imguri })
+      }
+      if (typeof this.props.navigation.state.params.data !== "undefined") {
+        this.setState({ descricao: this.props.navigation.state.params.data.descricao })
+        this.setState({ uri: this.props.navigation.state.params.data.imagem })
+      }
     }
   }
+  /*componentDidUpdate() {
+    if (typeof this.props.navigation.state.params !== "undefined") {
+      if (typeof this.props.navigation.state.params.imguri !== "") {
+        this.setState({ uri: this.props.navigation.state.params.imguri })
+      }
+      if (typeof this.props.navigation.state.params.data !== "undefined") {
+        this.setState({ descricao: this.props.navigation.state.params.data.descricao })
+        this.setState({ uri: this.props.navigation.state.params.data.imagem })
+      }
+    }
+  }*/
 
   constructor(props) {
     super(props);
@@ -54,10 +70,21 @@ export default class FilmeScreen extends Component {
 
   salvar() {
     //insert na base
-    db.transaction(tx => {
-      tx.executeSql('INSERT INTO filme(descricao,imagem) VALUES(?, ?)',
-        [this.state.descricao, this.state.uri]);
-    })
+    if ((typeof this.props.navigation.state.params !== "undefined") &&
+      (typeof this.props.navigation.state.params.data !== "undefined") &&
+      (typeof this.props.navigation.state.params.data.codigo !== "")) {
+
+      db.transaction(tx => {
+        tx.executeSql('UPDATE filme set descricao = ?, imagem = ? where codigo = ?',
+          [this.state.descricao, this.state.uri, this.props.navigation.state.params.data.codigo]);
+      })
+
+    } else {
+      db.transaction(tx => {
+        tx.executeSql('INSERT INTO filme(descricao,imagem) VALUES(?, ?)',
+          [this.state.descricao, this.state.uri]);
+      })
+    }
     this.props.navigation.navigate('Lista');
   }
 
@@ -79,6 +106,7 @@ export default class FilmeScreen extends Component {
         <View style={styles.areaInput}>
           <TextInput style={styles.inputText}
             multiline={true} placeholder='Descrição'
+            value={this.state.descricao}
             onChangeText={(valor) => this.setState({ descricao: valor })} />
         </View>
         <View style={styles.areaBotao}>

@@ -40,28 +40,11 @@ class LoginLoadingScreen extends Component {
 
         [], function (txp, res) {
           if (res.rows.length == 0) {
-            Alert.alert(
-              'Login',
-              'criando tabela',
-              [
-                  { text: 'OK' },
-              ],
-              { cancelable: false },
-          );
             tx.executeSql('CREATE TABLE IF NOT EXISTS filme(codigo INTEGER PRIMARY KEY AUTOINCREMENT, descricao VARCHAR(200), imagem blob)', []);
 
             tx.executeSql('INSERT INTO filme(descricao) VALUES(\'filme 01\')', []);
             tx.executeSql('INSERT INTO filme(descricao) VALUES(\'filme 02\')', []);
             tx.executeSql('INSERT INTO filme(descricao) VALUES(\'filme 03\')', []);
-
-            Alert.alert(
-              'Login',
-              'depois',
-              [
-                  { text: 'OK' },
-              ],
-              { cancelable: false },
-          );
           }
         })
     });
